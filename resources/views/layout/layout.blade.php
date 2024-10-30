@@ -16,6 +16,9 @@
 
 @livewireScripts
 
+    @if(Request::is('dashboard'))
+        @include('layout.components.header')
+    @endif
     @yield('content')
 
 </body>

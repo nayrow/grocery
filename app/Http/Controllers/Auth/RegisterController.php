@@ -12,11 +12,6 @@ use Illuminate\View\View;
 
 class RegisterController extends Controller
 {
-    public function showRegistrationForm(): View
-    {
-        return view('auth.register');
-    }
-
     public function register(RegisterRequest $request): RedirectResponse
     {
         $user = User::create([
