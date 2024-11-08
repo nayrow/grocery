@@ -16,6 +16,7 @@
                 <li class="font-bold whitespace-nowrap">
                     My account
                 </li>
+                <hr class="border-black"/>
                 <li>
                     <form
                         action="{{route('logout')}}"

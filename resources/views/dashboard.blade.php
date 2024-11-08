@@ -1,8 +1,11 @@
 @extends('layout.layout')
 
 @section('content')
-    <section class="p-48 min-h-screen bg-mindaro">
-        <div class="mx-auto">
-        </div>
-    </section>
+    @livewire('search-item')
+    <script>
+        function submitForm(event) {
+            const form = event.target.closest('form');
+            form.submit();
+        }
+    </script>
 @endsection
