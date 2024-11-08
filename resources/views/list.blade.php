@@ -1,7 +1,7 @@
 @extends('layout.layout')
 
 @section('content')
-    @livewire('search-item')
+    @livewire('current-list')
     <script>
         function submitForm(event) {
             const form = event.target.closest('form');

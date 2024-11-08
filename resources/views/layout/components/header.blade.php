@@ -4,7 +4,19 @@
     }"
     class="bg-transparent fixed py-8 px-24 w-full flex items-center justify-between"
 >
-    <img src="{{asset('apple.svg')}}" alt="" class="h-12">
+    <div class="flex items-center gap-20">
+        <a href="{{route('landing')}}">
+            <img src="{{asset('apple.svg')}}" alt="" class="h-12">
+        </a>
+        <div class="flex gap-8">
+            <a href="{{route('list')}}" class="font-bold text-xl {{request()->routeIs('list') ? 'scale-110 font-extrabold underline underline-offset-4' : ''}}">
+                Your List
+            </a>
+            <a href="{{route('stock')}}" class="font-bold text-xl {{request()->routeIs('stock') ? 'scale-110 font-extrabold underline underline-offset-4' : ''}}">
+                Your Stock
+            </a>
+        </div>
+    </div>
     <div class="relative">
         <button @click="isProfileDropDownOpen=!isProfileDropDownOpen"
                 class="text-xl font-bold">{{Auth::user()->name}}</button>

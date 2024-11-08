@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Item extends Model
 {
-    protected $fillable = ['user_id','name', 'quantity', 'grammage','checked'];
+    protected $fillable = ['user_id','name', 'quantity', 'grammage','checked','bought'];
 
     public function user(): BelongsTo
     {

@@ -7,7 +7,7 @@
         </h1>
         @if(Auth::user())
             <div class="w-full flex justify-center">
-                <a href="{{route('dashboard')}}" class="px-12 py-4 text-2xl font-bold bg-cerise rounded-md">
+                <a href="{{route('list')}}" class="px-12 py-4 text-2xl font-bold bg-cerise rounded-md">
                     Dashboard
                 </a>
             </div>

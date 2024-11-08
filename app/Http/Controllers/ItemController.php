@@ -45,7 +45,7 @@ class ItemController extends Controller
         ]);
 
 
-        return redirect()->route('dashboard');
+        return redirect()->route('list');
     }
 
     /**
@@ -67,22 +67,52 @@ class ItemController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function updateCheckedItems(Request $request)
     {
-        //
+        $items = Item::where('checked', true)->where('user_id', Auth::user()->id)->get();
+        foreach ($items as $item) {
+            $storedItem = Item::where('name', $item->name)->where('bought', 'true')->first();
+            if ($storedItem) {
+                if ($item->grammage === $storedItem->grammage) {
+                    $storedItem->update([
+                        'quantity' => $storedItem->quantity + $item->quantity,
+                    ]);
+                    $item->delete();
+                } else {
+                    if ($item->grammage === 'g' && $storedItem->grammage === 'kg') {
+                        $storedItem->update([
+                            'quantity' => $storedItem->quantity + $item->quantity / 1000,
+                        ]);
+                        $item->delete();
+                    }
+                    if ($item->grammage === 'kg' && $storedItem->grammage === 'g') {
+                        $storedItem->update([
+                            'quantity' => $storedItem->quantity/1000 + $item->quantity,
+                            'grammage' => 'kg',
+                        ]);
+                        $item->delete();
+                    }
+                    $item->update([
+                        'checked' => 0,
+                        'bought' => true,
+                    ]);
+                }
+            } else {
+                $item->update([
+                    'checked' => 0,
+                    'bought' => 'true',
+                ]);
+            }
+        }
+        return redirect()->route('list');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(): RedirectResponse
+    public function destroy(Item $item): RedirectResponse
     {
-        $items = Item::where('user_id', Auth::user()->id)->where('checked',true)->get();
-
-        foreach ($items as $item) {
-            $item->delete();
-        }
-
-        return redirect()->route('dashboard');
+        $item->delete();
+        return redirect()->route('list');
     }
 }

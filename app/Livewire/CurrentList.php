@@ -7,7 +7,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
-class SearchItem extends Component
+class CurrentList extends Component
 {
     public string $query = '';
     public array $items = [];
@@ -27,6 +27,7 @@ class SearchItem extends Component
     public function searchItems()
     {
         return Item::where('user_id', Auth::user()->id)
+            ->where('bought','false')
             ->where('name', 'like', '%' . $this->query . '%')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -42,7 +43,7 @@ class SearchItem extends Component
 
     public function render(): View
     {
-        return view('livewire.search-item',[
+        return view('livewire.current-list',[
             'items' => $this->items,
         ]);
     }

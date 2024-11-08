@@ -16,7 +16,7 @@
 
 @livewireScripts
 
-    @if(Request::is('dashboard'))
+    @if(request()->attributes->get('header'))
         @include('layout.components.header')
     @endif
     @yield('content')

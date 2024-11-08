@@ -17,20 +17,20 @@
     </div>
 
     <form
-        action="{{route('items.destroy')}}"
+        action="{{route('items.updateCheckedItems')}}"
         method="POST"
         @submit.prevent="submitForm($event)"
         class="text-red-600 text-center font-bold text-2xl mb-4 cursor-pointer"
         x-show="checkedItemsCount"
     >
         @csrf
-        @method('DELETE')
+        @method('PUT')
         <button type="submit">
             Remove checked item<span x-show="checkedItemsCount > 1">s</span>
         </button>
     </form>
 
-    <div x-show="!items.length && !wire.loading" class="text-center text-xl">No items found</div>
+    <div x-show="!items.length && !wire.loading" class="text-center text-xl mb-8">No items found</div>
 
     <div class="w-1/4 mx-auto text-2xl font-bold space-y-4">
         <form
