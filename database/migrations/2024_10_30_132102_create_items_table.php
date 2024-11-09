@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->float('quantity');
-            $table->enum('grammage',['piece','kg','g']);
+            $table->enum('unit',['kg','l']);
             $table->timestamps();
         });
     }

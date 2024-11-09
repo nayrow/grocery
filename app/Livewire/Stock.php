@@ -3,14 +3,21 @@
 namespace App\Livewire;
 
 use App\Models\Item;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class Stock extends Component
 {
+    public array $items = [];
     public string $query = '';
     public array $queryString = ['query' => ['except' => '']];
-    public function updatedQuery()
+
+    public function mount(): void
+    {
+        $this->items = $this->searchItems()->toArray();
+    }
+    public function updatedQuery(): void
     {
         $this->items = $this->searchItems()->toArray();
     }
@@ -23,10 +30,10 @@ class Stock extends Component
             ->get();
     }
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.stock',[
-            'items' =>$this->searchItems()
+            'items' =>$this->items
         ]);
     }
 }

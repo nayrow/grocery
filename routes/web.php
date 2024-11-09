@@ -23,5 +23,6 @@ Route::group(['middleware' => EnsureUserIsLoggedIn::class], function () {
     Route::resource('items', ItemController::class)->except('update');
 
     Route::put('items/updateCheckedItems', [ItemController::class, 'updateCheckedItems'])->name('items.updateCheckedItems');
+    Route::put('items/{item}/updateQuantity', [ItemController::class, 'updateQuantity'])->name('items.updateQuantity');
 });
 

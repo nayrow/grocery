@@ -34,13 +34,13 @@ class ItemController extends Controller
         $request->validate([
             'name' => 'required',
             'quantity' => 'required',
-            'grammage' => 'required',
+            'unit' => 'required|in:kg,l',
         ]);
 
         Item::create([
             'name' => $request->name,
             'quantity' => $request->quantity,
-            'grammage' => $request->grammage,
+            'unit' => $request->unit,
             'user_id' => Auth::user()->id,
         ]);
 
@@ -57,44 +57,23 @@ class ItemController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
-    public function updateCheckedItems(Request $request)
+    public function updateCheckedItems(): RedirectResponse
     {
         $items = Item::where('checked', true)->where('user_id', Auth::user()->id)->get();
         foreach ($items as $item) {
             $storedItem = Item::where('name', $item->name)->where('bought', 'true')->first();
             if ($storedItem) {
-                if ($item->grammage === $storedItem->grammage) {
+                if ($item->unit === $storedItem->unit) {
                     $storedItem->update([
                         'quantity' => $storedItem->quantity + $item->quantity,
                     ]);
                     $item->delete();
                 } else {
-                    if ($item->grammage === 'g' && $storedItem->grammage === 'kg') {
-                        $storedItem->update([
-                            'quantity' => $storedItem->quantity + $item->quantity / 1000,
-                        ]);
-                        $item->delete();
-                    }
-                    if ($item->grammage === 'kg' && $storedItem->grammage === 'g') {
-                        $storedItem->update([
-                            'quantity' => $storedItem->quantity/1000 + $item->quantity,
-                            'grammage' => 'kg',
-                        ]);
-                        $item->delete();
-                    }
                     $item->update([
                         'checked' => 0,
-                        'bought' => true,
+                        'bought' => 'true',
                     ]);
                 }
             } else {
@@ -104,7 +83,18 @@ class ItemController extends Controller
                 ]);
             }
         }
-        return redirect()->route('list');
+        return redirect()->route('stock');
+    }
+
+    function updateQuantity(Request $request,Item $item): RedirectResponse
+    {
+        $request->validate([
+            'quantity' => 'required',
+        ]);
+        $item->update([
+            'quantity' => $request->quantity,
+        ]);
+        return redirect()->route('stock');
     }
 
     /**

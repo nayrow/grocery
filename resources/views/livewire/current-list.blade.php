@@ -6,7 +6,6 @@
         }"
     class="p-48 min-h-screen bg-mindaro">
 
-    <!-- Search Input -->
     <div class="flex w-full justify-center mb-12">
         <input
             wire:model.live="query"
@@ -22,15 +21,16 @@
         @submit.prevent="submitForm($event)"
         class="text-red-600 text-center font-bold text-2xl mb-4 cursor-pointer"
         x-show="checkedItemsCount"
+        x-cloak
     >
         @csrf
         @method('PUT')
         <button type="submit">
-            Remove checked item<span x-show="checkedItemsCount > 1">s</span>
+            Remove checked item<span x-show="checkedItemsCount > 1" x-cloak>s</span>
         </button>
     </form>
 
-    <div x-show="!items.length && !wire.loading" class="text-center text-xl mb-8">No items found</div>
+    <div x-show="!items.length && !wire.loading" x-cloak class="text-center text-xl mb-8">No items found</div>
 
     <div class="w-1/4 mx-auto text-2xl font-bold space-y-4">
         <form
@@ -56,10 +56,13 @@
                     placeholder="..."
                     name="quantity"
                 >
-                <select name="grammage" id="grammage" class="bg-transparent outline-0 text-right">
+                <select
+                    name="unit"
+                    id="unit"
+                    class="bg-transparent outline-0 text-right"
+                >
                     <option value="kg">Kg</option>
-                    <option value="g">g</option>
-                    <option value="piece">Pc</option>
+                    <option value="l">L</option>
                 </select>
             </div>
         </form>
@@ -69,7 +72,7 @@
             >
                 <p x-text="item.name"></p>
                 <div class="flex gap-2">
-                    <p x-text="item.quantity + ' ' + item.grammage + (item.quantity > 1 && item.grammage == 'piece' ? 's' : '')"></p>
+                    <p x-text="item.quantity + ' ' + item.unit"></p>
                     <div
                         @click="item.checked = !item.checked"
                         wire:click="checkItem(item.id)"
