@@ -14,9 +14,6 @@
     <div x-show="!items.length && !wire.loading" x-cloak class="text-center text-xl mb-8">No items found</div>
 
     <div class="w-1/4 mx-auto text-2xl font-bold space-y-4">
-        @foreach($items as $item)
-
-        @endforeach
         <template x-for="item in items" :key="item.id">
             <div class="flex gap-2 relative">
                 <div

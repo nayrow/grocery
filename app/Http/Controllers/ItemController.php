@@ -6,6 +6,8 @@ use App\Models\Item;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use MathParser\StdMathParser;
+use MathParser\Interpreting\Evaluator;
 
 
 class ItemController extends Controller
@@ -86,14 +88,30 @@ class ItemController extends Controller
         return redirect()->route('stock');
     }
 
-    function updateQuantity(Request $request,Item $item): RedirectResponse
+
+    function updateQuantity(Request $request, Item $item): RedirectResponse
     {
         $request->validate([
             'quantity' => 'required',
         ]);
+
+        $parser = new StdMathParser();
+
+        try {
+            // Parse and evaluate the expression
+            $AST = $parser->parse($request->quantity);
+            $evaluator = new Evaluator();
+            $quantity = $AST->accept($evaluator);
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['quantity' => 'Invalid quantity expression.']);
+        }
+
+        // Update the item quantity
         $item->update([
-            'quantity' => $request->quantity,
+            'quantity' => $quantity,
         ]);
+
+
         return redirect()->route('stock');
     }
 
