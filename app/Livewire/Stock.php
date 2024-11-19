@@ -26,7 +26,8 @@ class Stock extends Component
         return Item::where('user_id', Auth::user()->id)
             ->where('bought', 'true')
             ->where('name', 'like', '%' . $this->query . '%')
-            ->orderBy('created_at', 'desc')
+            ->orderByRaw('CASE WHEN quantity <= 0.5 THEN 0 ELSE 1 END')
+            ->orderBy('name', 'desc')
             ->get();
     }
 

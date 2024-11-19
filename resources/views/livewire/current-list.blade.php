@@ -4,41 +4,44 @@
             return this.items.filter(item => item.checked).length;
         }
         }"
-    class="p-48 min-h-screen bg-mindaro">
+    class="p-24 md:p-32 xl:p-48 min-h-screen bg-mindaro">
+    <div class="relative">
+        <form
+            action="{{route('items.updateCheckedItems')}}"
+            method="POST"
+            @submit.prevent="submitForm($event)"
+            class="absolute left-1/2 -translate-x-1/2 -top-16 text-red-600 text-center font-bold text-2xl mb-4 cursor-pointer"
+            x-show="checkedItemsCount"
+            x-cloak
+        >
+            @csrf
+            @method('PUT')
+            <button type="submit">
+                Remove checked item<span x-show="checkedItemsCount > 1" x-cloak>s</span>
+            </button>
+        </form>
+    </div>
 
     <div class="flex w-full justify-center mb-12">
         <input
             wire:model.live="query"
             type="text"
-            class="px-4 py-2 text-2xl bg-transparent outline-0 border-2 border-black rounded-xl w-1/4 placeholder-black"
+            class="px-4 py-2 text-2xl bg-transparent outline-0 border-2 border-black rounded-xl w-full xl:w-1/2 2xl:w-1/4 placeholder-black"
             placeholder="Search Item..."
         >
     </div>
 
-    <form
-        action="{{route('items.updateCheckedItems')}}"
-        method="POST"
-        @submit.prevent="submitForm($event)"
-        class="text-red-600 text-center font-bold text-2xl mb-4 cursor-pointer"
-        x-show="checkedItemsCount"
-        x-cloak
-    >
-        @csrf
-        @method('PUT')
-        <button type="submit">
-            Remove checked item<span x-show="checkedItemsCount > 1" x-cloak>s</span>
-        </button>
-    </form>
-
     <div x-show="!items.length && !wire.loading" x-cloak class="text-center text-xl mb-8">No items found</div>
 
-    <div class="w-1/4 mx-auto text-2xl font-bold space-y-4">
+    <div class="w-full xl:w-1/2 2xl:w-1/4 mx-auto font-bold">
+        <h2 class="text-base">{{ __("Add a new item") }}</h2>
+        <p class="mb-4 text-sm">{{ __("Enter the name of the item and it's weight") }}</p>
         <form
             @keydown.enter.prevent="submitForm($event)"
             action="{{ route('items.store') }}"
             method="POST"
             x-ref="form"
-            class="w-full rounded-xl bg-cerise h-12 flex justify-between items-center px-4"
+            class="w-full rounded-xl shadow-lg bg-cerise transition-all h-12 flex justify-between items-center px-4 mb-4"
         >
             @csrf
             <input
@@ -71,12 +74,12 @@
                 class="w-full rounded-xl bg-cerise h-12 flex justify-between items-center px-4"
             >
                 <p x-text="item.name"></p>
-                <div class="flex gap-2">
+                <div class="flex items-center gap-2">
                     <p x-text="item.quantity + ' ' + item.unit"></p>
                     <div
                         @click="item.checked = !item.checked"
                         wire:click="checkItem(item.id)"
-                        class="h-8 aspect-square rounded-md border-2 border-black cursor-pointer"
+                        class="h-6 aspect-square rounded-md border-2 border-black cursor-pointer"
                         :class="{'bg-green-700': item.checked, 'bg-transparent': !item.checked}"
                     >
                     </div>

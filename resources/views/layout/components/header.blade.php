@@ -2,9 +2,9 @@
     x-data="{
     isProfileDropDownOpen: false,
     }"
-    class="bg-transparent fixed py-8 px-24 w-full flex items-center justify-between"
+    class="bg-transparent fixed py-8 px-12 w-full flex items-center justify-between"
 >
-    <div class="flex items-center gap-20">
+    <div class="flex items-center gap-8 lg:gap-20">
         <a href="{{route('landing')}}">
             <img src="{{asset('apple.svg')}}" alt="" class="h-12">
         </a>
@@ -26,7 +26,9 @@
             class="absolute w-full flex flex-col items-center top-full left-1/2 -translate-x-1/2">
             <ul class="py-2 w-fit px-4 bg-white rounded-md mt-2 text-center space-y-2">
                 <li class="font-bold whitespace-nowrap">
-                    My account
+                    <a href="{{route('profile')}}">
+                        My account
+                    </a>
                 </li>
                 <hr class="border-black"/>
                 <li>

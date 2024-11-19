@@ -20,7 +20,7 @@ export default {
                 'cool-gray' : '#7D84B2',
                 'brunswick-green' : '#004643',
                 'mindaro' : '#DBF4A7',
-                'cerise' : '#E5446D',
+                'cerise' : '#e2577d',
             },
         },
     },

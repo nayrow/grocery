@@ -16,10 +16,14 @@
 
 @livewireScripts
 
-    @if(request()->attributes->get('header'))
-        @include('layout.components.header')
-    @endif
-    @yield('content')
+@include('layout.components.errors')
+
+@include('layout.components.success')
+
+@if(request()->attributes->get('header'))
+    @include('layout.components.header')
+@endif
+@yield('content')
 
 </body>
 

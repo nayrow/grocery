@@ -65,19 +65,12 @@ class ItemController extends Controller
     {
         $items = Item::where('checked', true)->where('user_id', Auth::user()->id)->get();
         foreach ($items as $item) {
-            $storedItem = Item::where('name', $item->name)->where('bought', 'true')->first();
+            $storedItem = Item::where('name', $item->name)->where('bought', 'true')->where('unit',$item->unit)->first();
             if ($storedItem) {
-                if ($item->unit === $storedItem->unit) {
                     $storedItem->update([
                         'quantity' => $storedItem->quantity + $item->quantity,
                     ]);
                     $item->delete();
-                } else {
-                    $item->update([
-                        'checked' => 0,
-                        'bought' => 'true',
-                    ]);
-                }
             } else {
                 $item->update([
                     'checked' => 0,
@@ -87,7 +80,6 @@ class ItemController extends Controller
         }
         return redirect()->route('stock');
     }
-
 
     function updateQuantity(Request $request, Item $item): RedirectResponse
     {
@@ -115,12 +107,9 @@ class ItemController extends Controller
         return redirect()->route('stock');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Item $item): RedirectResponse
     {
         $item->delete();
-        return redirect()->route('list');
+        return redirect()->route('stock');
     }
 }
