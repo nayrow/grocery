@@ -23,10 +23,10 @@
                         <label for="name">Name</label>
                         <div class="flex gap-4">
                             <input value="{{$user->household->name}}" type="text" name="name" id="name"
-                                   class="w-1/3 bg-transparent border-2 border-black outline-0 px-4 p-2 rounded-md">
+                                   class="w-1/3 bg-transparent border-2 border-black outline-0 px-4 py-2 rounded-md">
                             <button
                                 type="submit"
-                                class="px-6 py-2 font-bold bg-cerise text-black rounded-md"
+                                class="px-6 py-2 font-bold bg-cerise w-28 h-12 text-black rounded-md"
                             >
                                 Change
                             </button>
@@ -44,6 +44,41 @@
                         </p>
                     </div>
                 </div>
+            @endif
+            @if($user->household->users())
+                <div
+                    x-data="{isInviteModalOpen:false}"
+                >
+                    <div
+                        class="flex gap-4 mt-8 mb-4"
+                    >
+                        <p class="text-xl capitalize font-bold mt-4 w-1/3">
+                            Members
+                        </p>
+                        <button
+                            @click="isInviteModalOpen=!isInviteModalOpen"
+                            class="px-6 w-28 h-12 py-2 font-bold bg-cool-gray text-black rounded-md"
+                        >
+                            Invite
+                        </button>
+                    </div>
+                    @livewire('invite-modal')
+                </div>
+                <ul class="flex flex-col gap-2 w-full">
+                    @foreach($user->household->users as $member)
+                        @if($member->id!==$user->id)
+                            <li class="flex items
+                        -center gap-10 mb-2">
+                                <p class="w-1/3">{{$member->name}}</p>
+                                @if($user->id===$user->household->user_id)
+                                    <button class="underline text-red-500">
+                                        Remove
+                                    </button>
+                                @endif
+                            </li>
+                        @endif
+                    @endforeach
+                </ul>
             @endif
         @else
             <p class="mb-8">

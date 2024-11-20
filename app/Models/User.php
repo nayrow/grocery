@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @method static find(int $user_id)
+ */
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -62,5 +65,14 @@ class User extends Authenticatable
     public function invitations(): HasMany
     {
         return $this->hasMany(HouseholdInvitation::class);
+    }
+
+    public function invitedToHousehold(Household $household): bool
+    {
+        $invite = HouseholdInvitation::where('user_id', $this->id)
+            ->where('household_id', $household->id)
+            ->where('status', 'pending')
+            ->first();
+        return (bool)$invite;
     }
 }
