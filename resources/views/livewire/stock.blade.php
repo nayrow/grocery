@@ -1,105 +1,78 @@
 <section
     x-data="{ items: $wire.entangle('items')}"
-    class="p-24 md:p-32 xl:p-48 min-h-screen bg-mindaro">
+    class="p-24 md:p-32 xl:p-48 min-h-screen bg-white">
 
-    <div class="flex w-full justify-center mb-12">
+    <div class="flex w-1/3 mx-auto justify-center mb-12">
         <input
             wire:model.live="query"
             type="text"
-            class="px-4 py-2 text-2xl bg-transparent outline-0 border-2 border-black rounded-xl w-full xl:w-1/2 2xl:w-1/4 placeholder-black"
+            class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
             placeholder="Search Item..."
         >
     </div>
 
-    <div x-show="!items.length && !wire.loading" x-cloak class="text-center text-xl mb-8">No items found</div>
-
-    <div class="w-full xl:w-1/2 2xl:w-1/4 mx-auto text-2xl font-bold space-y-4">
-        <template x-for="item in items" :key="item.id">
-            <div class="flex gap-2 relative">
-                <div
-                    x-data="{showTooltip: false}"
-                    class="relative"
-                >
-                    <x-icons.exclamation-circle
-                        :size="7"
-                        class="absolute h-6 text-cerise top-1/2 -translate-y-1/2 -left-8"
-                        x-show="item.quantity <= 0.5"
-                        @mouseenter="showTooltip = true"
-                        @mouseleave="showTooltip = false"
-                    />
-
-                    <div
-                        x-show="showTooltip"
-                        class="absolute bottom-3/4 mb-1 p-1 text-black text-center text-base whitespace-nowrap rounded-md -left-14"
-                        x-transition:enter="transition ease-out duration-300"
-                        x-transition:enter-start="opacity-0 transform scale-90"
-                        x-transition:enter-end="opacity-100 transform scale-100"
-                        x-transition:leave="transition ease-in duration-300"
-                        x-transition:leave-start="opacity-100 transform scale-100"
-                        x-transition:leave-end="opacity-0 transform scale-90"
-                    >
-                        Low stock
-                    </div>
-                </div>
-                <div
-                    class="w-full rounded-xl bg-cerise h-12 flex justify-between items-center px-4"
-                >
-                    <p x-text="item.name"></p>
-                    <div class="flex gap-2">
-                        <form :action="`items/${item.id}/updateQuantity`" method="POST">
-                            @csrf
-                            @method('PUT')
-                            <input
-                                type="text"
-                                x-model="item.quantity"
-                                name="quantity"
-                                class="border-0 outline-0 bg-transparent placeholder-black w-20 text-right"
-                            >
-                        </form>
-                        <p x-text="item.unit" class="w-6 capitalize"></p>
-                    </div>
-                </div>
-                <form
-                    x-data="{isConfirmModalOpen: false}"
-                    :action="`items/${item.id}`"
-                    method="POST"
-                    class="relative"
-                >
-                    @csrf
-                    @method('DELETE')
-                    <div @click="isConfirmModalOpen=!isConfirmModalOpen">
-                        <x-icons.trash
-                            :size="7"
-                            class="absolute h-6 text-cerise top-1/2 -translate-y-1/2 -right-8"
-                        />
-                    </div>
-                    <div
-                        x-show="isConfirmModalOpen"
-                        x-cloak
-                        class="fixed left-1/2 -translate-x-1/2 top-12"
-                    >
-                        <div class="bg-brunswick-green text-white rounded-lg shadow-lg p-4">
-                            <p class="text-xl">Are you sure you want to delete this item?</p>
-                            <div class="flex justify-between px-12 gap-4 mt-4">
-                                <button
-                                    type="button"
-                                    @click="isConfirmModalOpen=!isConfirmModalOpen"
-                                    class="px-4 py-2 bg-cerise text-white rounded-lg"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    class="px-4 py-2 bg-cerise text-white rounded-lg"
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+    <div class="px-4 sm:px-6 lg:px-8 mx-auto w-full lg:w-1/2">
+        <div class="sm:flex sm:justify-between mx-auto w-full sm:items-center">
+            <div class="sm:flex-auto">
+                <h1 class="text-base font-semibold text-gray-900">Household Stock</h1>
             </div>
-        </template>
+            <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none flex gap-4">
+                <a      href="{{route('list')}}"
+                        @click="addItem=true"
+                        class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    Add Item
+                </a>
+            </div>
+        </div>
+        <div x-show="!items.length && !wire.loading" x-cloak class="text-center text-xl mb-8">No items found</div>
+        <div
+            x-show="items.length"
+            class="flex justify-center w-full">
+            <div class="mx-4 mt-10 ring-1 w-full ring-gray-300 sm:mx-0 sm:rounded-lg">
+                <table class="min-w-full divide-y divide-gray-300">
+                    <thead>
+                    <tr>
+                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                            Item Name
+                        </th>
+                        <th scope="col"
+                            class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">
+                            Quantity
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <template x-for="item in items" :key="item.id">
+                        <tr>
+                            <td class="relative py-4 pl-4 pr-3 text-sm sm:pl-6">
+                                <div class="font-medium text-gray-900 capitalize" x-text="item.name"></div>
+                                <div class="mt-1 text-gray-500 block sm:hidden">
+                                    <span x-text="item.quantity"></span>
+                                </div>
+                            </td>
+                            <td x-text="item.quantity" class="hidden px-3 py-3.5 text-sm text-gray-500 sm:table-cell">
+                            </td>
+
+                            <td class="relative py-3.5 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                <div class="flex gap-4 justify-end">
+                                    <form :action="`items/${item.id}`"
+                                          method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                                class="block rounded-md bg-red-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+                                            <span class="sr-only">Check</span>
+                                            <span>Remove</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </section>
 

@@ -36,13 +36,11 @@ class ItemController extends Controller
         $request->validate([
             'name' => 'required',
             'quantity' => 'required',
-            'unit' => 'required|in:kg,l',
         ]);
 
         Item::create([
             'name' => $request->name,
             'quantity' => $request->quantity,
-            'unit' => $request->unit,
             'user_id' => Auth::user()->id,
         ]);
 
@@ -65,7 +63,7 @@ class ItemController extends Controller
     {
         $items = Item::where('checked', true)->where('user_id', Auth::user()->id)->get();
         foreach ($items as $item) {
-            $storedItem = Item::where('name', $item->name)->where('bought', 'true')->where('unit',$item->unit)->first();
+            $storedItem = Item::where('name', $item->name)->where('bought', 'true')->first();
             if ($storedItem) {
                     $storedItem->update([
                         'quantity' => $storedItem->quantity + $item->quantity,
@@ -78,7 +76,7 @@ class ItemController extends Controller
                 ]);
             }
         }
-        return redirect()->route('stock');
+        return redirect()->route('stock')->with('success','Items bought successfully');
     }
 
     function updateQuantity(Request $request, Item $item): RedirectResponse
@@ -90,7 +88,6 @@ class ItemController extends Controller
         $parser = new StdMathParser();
 
         try {
-            // Parse and evaluate the expression
             $AST = $parser->parse($request->quantity);
             $evaluator = new Evaluator();
             $quantity = $AST->accept($evaluator);
@@ -98,7 +95,6 @@ class ItemController extends Controller
             return redirect()->back()->withErrors(['quantity' => 'Invalid quantity expression.']);
         }
 
-        // Update the item quantity
         $item->update([
             'quantity' => $quantity,
         ]);
@@ -110,6 +106,6 @@ class ItemController extends Controller
     public function destroy(Item $item): RedirectResponse
     {
         $item->delete();
-        return redirect()->route('stock');
+        return redirect()->back();
     }
 }

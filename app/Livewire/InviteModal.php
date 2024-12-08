@@ -27,6 +27,7 @@ class InviteModal extends Component
                 $query->where('household_id', auth()->user()->household_id)
                     ->where('status', 'pending');
             })
+            ->take(5)
             ->get();
     }
 
